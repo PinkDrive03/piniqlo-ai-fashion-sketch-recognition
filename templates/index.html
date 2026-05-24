@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piniglo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Piniglo</p>
+        <h1>Nhận dạng trang phục từ nét vẽ chuột</h1>
+        <p class="hero-copy">
+          Vẽ trực tiếp trên khung trắng, hệ thống sẽ chuẩn hóa nét vẽ theo định
+          dạng QuickDraw và dự đoán món đồ gần nhất theo thời gian thực.
+        </p>
+        <p class="hero-meta">
+          Hiện ứng dụng hỗ trợ <strong>{{ class_items | length }} nhãn</strong> cho
+          nhóm trang phục và phụ kiện cơ bản.
+        </p>
+      </section>
+
+      <section class="workspace-grid">
+        <article class="panel panel-drawing">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Khu vực vẽ</p>
+              <h2>Phác thảo bằng chuột</h2>
+            </div>
+            <span class="status-pill {{ 'status-ready' if model_ready else 'status-waiting' }}">
+              {{ 'Mô hình đã sẵn sàng' if model_ready else 'Chưa có mô hình' }}
+            </span>
+          </div>
+
+          <div class="canvas-frame">
+            <canvas id="drawing-board" width="420" height="420"></canvas>
+          </div>
+
+          <div class="canvas-actions">
+            <button id="predict-button" class="primary-button">Nhận dạng ngay</button>
+            <button id="clear-button" class="secondary-button">Xóa khung vẽ</button>
+          </div>
+
+          <div class="hint-box">
+            <p class="hint-title">Mẹo để nhận dạng ổn định hơn</p>
+            <ul>
+              <li>Vẽ một món đồ ở gần giữa khung.</li>
+              <li>Dùng nét rõ ràng, tránh chồng quá nhiều lớp nét.</li>
+              <li>Ứng dụng sẽ tự đoán sau khi bạn dừng vẽ trong chốc lát.</li>
+            </ul>
+          </div>
+
+          <div class="label-box">
+            <p class="hint-title">Các nhãn hiện đang hỗ trợ</p>
+            <div class="label-chip-list">
+              {% for item in class_items %}
+              <span class="label-chip">{{ item.label }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </article>
+
+        <article class="panel panel-result">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Kết quả</p>
+              <h2>Dự đoán từ mô hình</h2>
+            </div>
+          </div>
+
+          <div class="result-hero">
+            <p class="result-caption">Nhãn phù hợp nhất</p>
+            <h3 id="top-label">Chưa có kết quả</h3>
+            <p id="top-confidence" class="result-confidence">Hãy vẽ để bắt đầu nhận dạng</p>
+          </div>
+
+          <div class="probability-list" id="probability-list">
+            {% for item in class_items %}
+            <div class="probability-card" data-key="{{ item.key }}">
+              <div class="probability-row">
+                <span class="probability-label">{{ item.label }}</span>
+                <span class="probability-score">0%</span>
+              </div>
+              <div class="probability-track">
+                <div class="probability-fill"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div id="message-box" class="message-box">
+            {% if not model_ready %}
+            Mô hình chưa được huấn luyện. Hãy chạy script train trước khi nhận dạng.
+            {% else %}
+            Ứng dụng đã sẵn sàng nhận dạng từ nét vẽ của bạn.
+            {% endif %}
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      window.APP_CONFIG = {
+        modelReady: {{ 'true' if model_ready else 'false' }},
+        classes: {{ class_items | tojson }}
+      };
+    </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>
