@@ -1,6 +1,6 @@
-# PINGO - AI Sketch Recognition
+# PINIQLO - AI Sketch Recognition
 
-PINGO là một website ứng dụng trí tuệ nhân tạo để nhận dạng trang phục và phụ kiện thời trang từ nét vẽ chuột. Người dùng có thể phác thảo trực tiếp trên khung Canvas, sau đó hệ thống sẽ xử lý hình vẽ và đưa ra dự đoán món đồ phù hợp nhất.
+PINIQLO là một website ứng dụng trí tuệ nhân tạo để nhận dạng trang phục và phụ kiện thời trang từ nét vẽ chuột. Người dùng có thể phác thảo trực tiếp trên khung Canvas, sau đó hệ thống sẽ xử lý hình vẽ và đưa ra dự đoán món đồ phù hợp nhất.
 
 ## Giới thiệu
 
